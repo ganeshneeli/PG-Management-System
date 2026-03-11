@@ -54,10 +54,31 @@ if (cluster.isMaster) {
         // 3. Initialize Sockets
         socketServer.init(server);
 
-        // 4. Initialize Cron Jobs
-        // Only start cron jobs on one specific worker to avoid duplicate tasks
+        // 4. Initialize Cron Jobs & Admin Seeding
+        // Only start cron jobs and seeding on one specific worker to avoid duplicate tasks
         if (cluster.worker.id === 1) {
             cronService.startCronJobs();
+            
+            // Seed default admin if DB is completely empty (For Production auto-setup)
+            setTimeout(async () => {
+                try {
+                    const User = require("./models/user.model");
+                    const adminCount = await User.countDocuments({ role: "admin" });
+                    if (adminCount === 0) {
+                        console.log("⚠️ No admin user found in database. Seeding default admin...");
+                        await User.create({
+                            name: "Admin User",
+                            email: "admin@modernpg.com",
+                            phone: "9999999999",
+                            password: "admin123", // In actual production this should be hashed, but matches current repo logic
+                            role: "admin"
+                        });
+                        console.log("✅ Default admin created: admin@modernpg.com / admin123");
+                    }
+                } catch (err) {
+                    console.error("Failed to seed default admin:", err.message);
+                }
+            }, 5000); // Wait 5 seconds to ensure DB connection is stable
         }
 
         // 5. Start listening
