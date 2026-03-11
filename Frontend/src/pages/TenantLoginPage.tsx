@@ -32,7 +32,11 @@ export default function TenantLoginPage() {
             navigate("/tenant/dashboard");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data?.message || "Invalid tenant credentials.");
+            if (!error.response) {
+                toast.error("Network Error: Could not connect to the Backend.");
+            } else {
+                toast.error(error.response?.data?.message || "Invalid tenant credentials.");
+            }
         },
     });
 
