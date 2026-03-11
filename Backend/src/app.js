@@ -1,0 +1,72 @@
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const compression = require("compression");
+const rateLimit = require("express-rate-limit");
+const { errorHandler } = require("./middleware/error.middleware");
+const { logger } = require("./middleware/logger.middleware");
+
+// Importing Routes
+const authRoutes = require("./modules/auth/auth.routes");
+const roomRoutes = require("./modules/room/room.routes");
+const tenantRoutes = require("./modules/tenant/tenant.routes");
+const billingRoutes = require("./modules/billing/billing.routes");
+const foodRoutes = require("./modules/foodMenu/food.routes");
+const notificationRoutes = require("./modules/notification/notification.routes");
+const complaintRoutes = require("./modules/complaint/complaint.routes");
+const analyticsRoutes = require("./modules/analytics/analytics.routes");
+const visitorLogRoutes = require("./modules/visitorLog/visitorLog.routes");
+
+const app = express();
+
+// Standard Rate Limiter: 1000 requests per 15 minutes per IP (increased for robustness)
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5000, // Support 1000+ users without hitting limits
+    message: { success: false, message: "Too many requests from this IP, please try again after 15 minutes" },
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: (req) => process.env.NODE_ENV === "development" && req.ip === "127.0.0.1", // Optional: skip local dev
+});
+
+app.use(compression()); // Compress all responses
+app.use(limiter); // Apply rate limiting to all requests
+app.use(logger);
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Global Request Timeout Middleware (30 seconds)
+app.use((req, res, next) => {
+    res.setTimeout(30000, () => {
+        if (!res.headersSent) {
+            res.status(503).json({ success: false, message: "Request Timeout - Server busy" });
+        }
+    });
+    next();
+});
+
+// Health check
+app.get("/api/v1/health", (req, res) => {
+    res.status(200).json({ success: true, message: "PG Manager API is running", timestamp: new Date().toISOString() });
+});
+
+// Static resources
+app.use("/bills", express.static(path.join(__dirname, "../../bills")));
+app.use("/uploads", express.static(path.join(__dirname, "../../uploads")));
+
+// Setting up Routes
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/rooms", roomRoutes);
+app.use("/api/v1/tenants", tenantRoutes);
+app.use("/api/v1/bills", billingRoutes);
+app.use("/api/v1/menu", foodRoutes);
+app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/complaints", complaintRoutes);
+app.use("/api/v1/analytics", analyticsRoutes);
+app.use("/api/v1/visitors", visitorLogRoutes);
+
+// Global Error Handler
+app.use(errorHandler);
+
+module.exports = app;
