@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/my-bills", authenticate, authorize([ROLES.TENANT, ROLES.ADMIN]), billingController.getMyBills);
 router.get("/:id/download", authenticate, authorize([ROLES.ADMIN, ROLES.TENANT]), billingController.downloadBill);
-router.get("/", authenticate, authorize([ROLES.ADMIN, ROLES.TENANT]), billingController.getAllBills);
+router.get("/", authenticate, authorize([ROLES.ADMIN]), billingController.getAllBills);
 router.post("/generate-monthly", authenticate, authorize([ROLES.ADMIN]), billingController.generateMonthlyBills);
 router.post("/", authenticate, authorize([ROLES.ADMIN]), billingController.generateBill);
 router.put("/payment-update/:id", authenticate, authorize([ROLES.ADMIN]), billingController.updatePayment);

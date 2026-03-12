@@ -59,6 +59,10 @@ if (cluster.isMaster) {
         if (cluster.worker.id === 1) {
             cronService.startCronJobs();
             
+            // Initialize Background Job Worker
+            const { initWorker } = require("./queues/billing.queue");
+            initWorker();
+            
             // Seed default admin if DB is completely empty (For Production auto-setup)
             setTimeout(async () => {
                 try {

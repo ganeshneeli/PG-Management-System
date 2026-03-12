@@ -4,7 +4,7 @@ const redis = require("../../config/redis");
 class RoomController {
     async getAllRooms(req, res, next) {
         try {
-            const rooms = await roomService.getAllRooms();
+            const rooms = await roomService.getAllRooms(req.user.role);
             res.status(200).json({ success: true, count: rooms.length, data: rooms });
         } catch (error) {
             next(error);

@@ -3,6 +3,8 @@ const cors = require("cors");
 const path = require("path");
 const compression = require("compression");
 const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
 const { errorHandler } = require("./middleware/error.middleware");
 const { logger } = require("./middleware/logger.middleware");
 
@@ -16,14 +18,23 @@ const notificationRoutes = require("./modules/notification/notification.routes")
 const complaintRoutes = require("./modules/complaint/complaint.routes");
 const analyticsRoutes = require("./modules/analytics/analytics.routes");
 const visitorLogRoutes = require("./modules/visitorLog/visitorLog.routes");
+const expenseRoutes = require("./modules/expense/expense.routes");
 
 const app = express();
+ 
+// Trust Proxy for Load Balancers (NGINX)
+app.set('trust proxy', 1);
+ 
+// Security Hardening
+app.use(helmet()); // Add standard security headers
+app.use(mongoSanitize()); // Prevent NoSQL Injection
+app.disable('x-powered-by'); // Hide stack info
 
 // Standard Rate Limiter: 1000 requests per 15 minutes per IP (increased for robustness)
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 5000, // Support 1000+ users without hitting limits
-    message: { success: false, message: "Too many requests from this IP, please try again after 15 minutes" },
+    max: 5000, 
+    message: { success: false, message: "Security Notice: Rate limit exceeded. Please wait 15 minutes." },
     standardHeaders: true,
     legacyHeaders: false,
     skip: (req) => process.env.NODE_ENV === "development" && req.ip === "127.0.0.1", // Optional: skip local dev
@@ -65,6 +76,7 @@ app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/complaints", complaintRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/visitors", visitorLogRoutes);
+app.use("/api/v1/expenses", expenseRoutes);
 
 // Global Error Handler
 app.use(errorHandler);

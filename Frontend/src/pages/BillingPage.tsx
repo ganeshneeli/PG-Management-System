@@ -148,10 +148,34 @@ export default function BillingPage() {
 
   const updateMut = useMutation({
     mutationFn: ({ id, ...d }: { id: string; status: string; paidAmount?: number }) => updatePaymentStatus(id, d),
-    onSuccess: () => {
+    onMutate: async (variables) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await qc.cancelQueries({ queryKey: ["bills"] });
+
+      // Snapshot the previous value
+      const previousBills = qc.getQueryData(["bills"]);
+
+      // Optimistically update to the new value
+      qc.setQueryData(["bills"], (old: any) => {
+        if (!old?.data) return old;
+        return {
+          ...old,
+          data: old.data.map((bill: any) =>
+            bill._id === variables.id ? { ...bill, status: variables.status } : bill
+          ),
+        };
+      });
+
+      return { previousBills };
+    },
+    onError: (err, variables, context: any) => {
+      qc.setQueryData(["bills"], context.previousBills);
+      toast.error("Failed to update payment status");
+    },
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: ["bills"] });
-      qc.invalidateQueries({ queryKey: ["dashboard"] });
-      toast.success("Payment status updated");
+      // We don't necessarily need to invalidate dashboard instantly if we trust our optimistic calc
+      // but it's safer to do so after the animation.
     }
   });
 
@@ -284,16 +308,33 @@ export default function BillingPage() {
 
       {/* Room Cards */}
       {isLoading ? <TableLoader /> : (
-        <div className="grid gap-6">
-          <AnimatePresence>
+        <motion.div 
+          layout
+          initial="hidden"
+          animate="show"
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.05
+              }
+            }
+          }}
+          className="grid gap-6"
+        >
+          <AnimatePresence mode="popLayout">
             {groupedBills.map((group) => (
               <motion.div
                 layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  show: { opacity: 1, y: 0 }
+                }}
+                exit={{ opacity: 0, scale: 0.95 }}
                 key={group.roomId}
                 className={cn(
-                  "group rounded-[2.5rem] border transition-all duration-500 overflow-hidden",
+                  "group rounded-[1.5rem] sm:rounded-[2.5rem] border transition-all duration-500 overflow-hidden",
                   expandedRooms.includes(group.roomId) ? "ring-2 ring-primary bg-card" : "bg-card/50 hover:bg-card hover:border-primary/50"
                 )}
               >
@@ -461,7 +502,7 @@ export default function BillingPage() {
               </div>
             </div>
           )}
-        </div>
+        </motion.div>
       )}
     </div>
   );

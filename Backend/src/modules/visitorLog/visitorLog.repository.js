@@ -5,8 +5,13 @@ class VisitorLogRepository {
         return await VisitorLog.create(data);
     }
 
-    async findAll() {
-        return await VisitorLog.find().populate("tenantId").sort({ checkInTime: -1 }).limit(100);
+    async findAll(page = 1, limit = 50) {
+        const skip = (page - 1) * limit;
+        const [data, total] = await Promise.all([
+            VisitorLog.find().populate("tenantId").sort({ checkInTime: -1 }).skip(skip).limit(limit),
+            VisitorLog.countDocuments()
+        ]);
+        return { data, total, page, totalPages: Math.ceil(total / limit) };
     }
 
     async checkOut(id) {
@@ -21,8 +26,13 @@ class VisitorLogRepository {
         return await VisitorLog.findByIdAndUpdate(id, { status }, { new: true });
     }
 
-    async findByTenantId(tenantId) {
-        return await VisitorLog.find({ tenantId }).sort({ checkInTime: -1 }).limit(100);
+    async findByTenantId(tenantId, page = 1, limit = 50) {
+        const skip = (page - 1) * limit;
+        const [data, total] = await Promise.all([
+            VisitorLog.find({ tenantId }).sort({ checkInTime: -1 }).skip(skip).limit(limit),
+            VisitorLog.countDocuments({ tenantId })
+        ]);
+        return { data, total, page, totalPages: Math.ceil(total / limit) };
     }
 }
 

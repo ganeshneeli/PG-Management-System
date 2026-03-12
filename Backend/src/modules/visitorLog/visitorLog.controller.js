@@ -15,13 +15,22 @@ class VisitorLogController {
 
     async getAllLogs(req, res, next) {
         try {
-            const logs = await visitorLogService.getAllLogs();
-            res.status(200).json({ success: true, count: logs.length, data: logs });
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 50;
+            const result = await visitorLogService.getAllLogs(page, limit);
+            res.status(200).json({ 
+                success: true, 
+                count: result.data.length,
+                total: result.total,
+                page: result.page,
+                totalPages: result.totalPages,
+                data: result.data 
+            });
         } catch (error) {
             next(error);
         }
     }
-
+ 
     async checkOutVisitor(req, res, next) {
         try {
             const log = await visitorLogService.checkOutVisitor(req.params.id);
@@ -32,13 +41,22 @@ class VisitorLogController {
             next(error);
         }
     }
-
+ 
     async getMyLogs(req, res, next) {
         try {
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 50;
             const tenant = await require("../tenant/tenant.repository").findByUserId(req.user.id);
             if (!tenant) return res.status(404).json({ success: false, message: "Tenant profile not found" });
-            const logs = await visitorLogService.getMyLogs(tenant._id);
-            res.status(200).json({ success: true, count: logs.length, data: logs });
+            const result = await visitorLogService.getMyLogs(tenant._id, page, limit);
+            res.status(200).json({ 
+                success: true, 
+                count: result.data.length,
+                total: result.total,
+                page: result.page,
+                totalPages: result.totalPages,
+                data: result.data 
+            });
         } catch (error) {
             next(error);
         }

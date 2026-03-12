@@ -28,8 +28,13 @@ async function withRetry(operation, maxRetries = 3) {
 }
 
 class BillingRepository {
-    async findAll() {
-        return await withRetry(() => Bill.find().populate("tenantId").populate("roomId").sort({ createdAt: -1 }).limit(100));
+    async findAll(page = 1, limit = 50) {
+        const skip = (page - 1) * limit;
+        const [data, total] = await Promise.all([
+            withRetry(() => Bill.find().populate("tenantId").populate("roomId").sort({ createdAt: -1 }).skip(skip).limit(limit)),
+            withRetry(() => Bill.countDocuments())
+        ]);
+        return { data, total, page, totalPages: Math.ceil(total / limit) };
     }
 
     async findById(id) {

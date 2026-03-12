@@ -8,8 +8,8 @@ const Tenant = require("../../models/tenant.model");
 const Room = require("../../models/room.model");
 
 class BillingService {
-    async getAllBills() {
-        return await billingRepository.findAll();
+    async getAllBills(page, limit) {
+        return await billingRepository.findAll(page, limit);
     }
 
     async getBillById(id) {
@@ -19,28 +19,24 @@ class BillingService {
     async generateBill(billData) {
         const bill = await billingRepository.create(billData);
         
-        // Parallel Post-Processing: PDF + Notification
-        Promise.all([
-            (async () => {
-                try {
-                    const populatedBill = await billingRepository.findById(bill._id);
-                    await pdfService.generateBillPDF(populatedBill);
-                } catch (err) {
-                    console.error("[Billing] PDF Generation failed:", bill._id, err.message);
-                }
-            })(),
-            (async () => {
-                try {
-                    const tenant = await tenantRepository.findById(billData.tenantId);
-                    if (tenant && tenant.phone) {
-                        const message = `Dear ${tenant.name}, your bill for ${billData.month} ${billData.year} has been generated. Amount: ₹${billData.amount}. Due by ${new Date(billData.dueDate).toLocaleDateString()}.`;
-                        await whatsappService.sendReminder(tenant.phone, message);
-                    }
-                } catch (err) {
-                    console.error("[Billing] WhatsApp notification failed:", err.message);
-                }
-            })()
-        ]);
+        // Background Job Processing: PDF + Notification via BullMQ
+        const { billingQueue } = require("../../queues/billing.queue");
+        
+        billingQueue.add('process-bill', {
+            type: 'GENERATE_PDF',
+            data: { billId: bill._id }
+        }, { 
+            attempts: 3, 
+            backoff: { type: 'exponential', delay: 1000 } 
+        });
+
+        billingQueue.add('process-bill', {
+            type: 'SEND_WHATSAPP',
+            data: { tenantId: billData.tenantId, billData }
+        }, { 
+            attempts: 3, 
+            backoff: { type: 'exponential', delay: 5000 } 
+        });
 
         return bill;
     }

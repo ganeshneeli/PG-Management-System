@@ -1,3 +1,7 @@
+exports.asyncHandler = (fn) => (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+};
+
 exports.errorHandler = (err, req, res, next) => {
     console.error(`[ERROR] ${req.method} ${req.originalUrl}:`, err.message);
     
@@ -10,7 +14,9 @@ exports.errorHandler = (err, req, res, next) => {
         });
     }
 
-    if (process.env.NODE_ENV !== "production") {
+    const isProduction = process.env.NODE_ENV === "production";
+
+    if (!isProduction) {
         console.error(err.stack);
     }
 
@@ -18,6 +24,6 @@ exports.errorHandler = (err, req, res, next) => {
     res.status(statusCode).json({
         success: false,
         message: err.message || "Server Error",
-        ...(process.env.NODE_ENV !== "production" && { path: req.originalUrl })
+        ...(!isProduction && { path: req.originalUrl, stack: err.stack })
     });
 };

@@ -46,6 +46,7 @@ const tenantSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // MongoDB Indexes for faster searching
+tenantSchema.index({ name: 1 });
 tenantSchema.index({ phone: 1 });
 tenantSchema.index({ email: 1 });
 tenantSchema.index({ roomId: 1 });

@@ -1,8 +1,12 @@
 const complaintRepository = require("./complaint.repository");
 
 class ComplaintService {
-    async getAllComplaints() {
-        return await complaintRepository.findAll();
+    async getAllComplaints(page, limit) {
+        return await complaintRepository.findAll(page, limit);
+    }
+ 
+    async getMyComplaints(tenantId, page, limit) {
+        return await complaintRepository.findByTenantId(tenantId, page, limit);
     }
 
     async getComplaintById(id) {

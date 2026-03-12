@@ -37,6 +37,7 @@ const roomSchema = new mongoose.Schema({
 
 // MongoDB Indexes for faster searching
 roomSchema.index({ status: 1 });
+roomSchema.index({ rentAmount: 1 });
 roomSchema.index({ roomType: 1, status: 1 }); // Compound index for dashboard filtering
 
 module.exports = mongoose.model("Room", roomSchema);

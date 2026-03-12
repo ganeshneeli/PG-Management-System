@@ -38,28 +38,33 @@ class TenantService {
             console.error("Auto-user creation warning:", err.message);
         }
 
-        // 2. Room capacity check
-        const room = await roomService.getRoomById(tenantData.roomId);
-        if (!room) {
-            throw new Error("Room not found. Please provide a valid Room ID.");
-        }
+        // 2. Atomic Room capacity check and occupancy update
+        const RoomModel = require("../../models/room.model");
+        const room = await RoomModel.findOneAndUpdate(
+            { 
+                _id: tenantData.roomId, 
+                $expr: { $lt: ["$currentTenants", "$capacity"] } 
+            },
+            { $inc: { currentTenants: 1 } },
+            { new: true }
+        );
 
-        if (room.currentTenants >= room.capacity) {
+        if (!room) {
+            // Re-check if room exists at all to provide better error
+            const exists = await RoomModel.findById(tenantData.roomId);
+            if (!exists) throw new Error("Room not found.");
             throw new Error("Room is already full. Cannot add more tenants.");
         }
 
-        // 3. Set status to active
+        // 3. Set status and auto-update room status if full
         tenantData.status = "active";
-
         const tenant = await tenantRepository.create(tenantData);
 
-        // 4. Update room occupancy
-        const newCount = (room.currentTenants || 0) + 1;
-        const newStatus = newCount >= room.capacity ? STATUS.ROOM.OCCUPIED : room.status;
-        await roomService.updateRoom(room._id, {
-            currentTenants: newCount,
-            status: newStatus
-        });
+        if (room.currentTenants >= room.capacity) {
+            await RoomModel.findByIdAndUpdate(room._id, { status: STATUS.ROOM.OCCUPIED });
+        } else {
+            await RoomModel.findByIdAndUpdate(room._id, { status: "partial" });
+        }
 
         return tenant;
     }
@@ -86,20 +91,28 @@ class TenantService {
             }
         }
 
-        // 2. Room occupancy update
+        // 2. Atomic Room occupancy decrement
         const roomId = tenant.roomId?._id || tenant.roomId;
-        const room = await roomService.getRoomById(roomId);
-        if (room) {
-            const newCount = Math.max(0, (room.currentTenants || 0) - 1);
-            let newStatus;
-            if (newCount === 0) newStatus = STATUS.ROOM.VACANT;
-            else if (newCount >= room.capacity) newStatus = STATUS.ROOM.OCCUPIED;
-            else newStatus = "partial";
+        if (roomId) {
+            const RoomModel = require("../../models/room.model");
+            const room = await RoomModel.findByIdAndUpdate(
+                roomId, 
+                { $inc: { currentTenants: -1 } }, 
+                { new: true }
+            );
 
-            await roomService.updateRoom(room._id, {
-                currentTenants: newCount,
-                status: newStatus
-            });
+            if (room) {
+                // Ensure count doesn't drop below zero and update status
+                const finalCount = Math.max(0, room.currentTenants);
+                let newStatus = "partial";
+                if (finalCount === 0) newStatus = STATUS.ROOM.VACANT;
+                else if (finalCount >= room.capacity) newStatus = STATUS.ROOM.OCCUPIED;
+
+                await RoomModel.findByIdAndUpdate(roomId, { 
+                    currentTenants: finalCount,
+                    status: newStatus 
+                });
+            }
         }
 
         // 3. Delete associated Bills (prevents "Unknown" orphaned entries in billing)
@@ -128,17 +141,25 @@ class TenantService {
             })
         ]);
 
-        if (room) {
-            const newCount = Math.max(0, (room.currentTenants || 0) - 1);
-            let newStatus;
-            if (newCount === 0) newStatus = STATUS.ROOM.VACANT;
-            else if (newCount >= room.capacity) newStatus = STATUS.ROOM.OCCUPIED;
-            else newStatus = "partial";
+        if (roomId) {
+            const RoomModel = require("../../models/room.model");
+            const room = await RoomModel.findByIdAndUpdate(
+                roomId, 
+                { $inc: { currentTenants: -1 } }, 
+                { new: true }
+            );
 
-            await roomService.updateRoom(room._id, {
-                currentTenants: newCount,
-                status: newStatus
-            });
+            if (room) {
+                const finalCount = Math.max(0, room.currentTenants);
+                let newStatus = "partial";
+                if (finalCount === 0) newStatus = STATUS.ROOM.VACANT;
+                else if (finalCount >= room.capacity) newStatus = STATUS.ROOM.OCCUPIED;
+
+                await RoomModel.findByIdAndUpdate(roomId, { 
+                    currentTenants: finalCount,
+                    status: newStatus 
+                });
+            }
         }
 
         return updatedTenant;

@@ -4,7 +4,8 @@ import {
   BedDouble, 
   Receipt, 
   MessageSquareWarning, 
-  User 
+  User,
+  Wallet
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
@@ -32,6 +33,7 @@ export function BottomNav() {
         { title: "Home", url: "/dashboard", icon: LayoutDashboard },
         { title: "Rooms", url: "/rooms", icon: BedDouble },
         { title: "Billing", url: "/billing", icon: Receipt },
+        { title: "Expenses", url: "/expenses", icon: Wallet },
         { title: "Alerts", url: "/complaints", icon: MessageSquareWarning },
       ]
     : [

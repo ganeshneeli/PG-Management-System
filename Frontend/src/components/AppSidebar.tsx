@@ -1,7 +1,7 @@
 import {
   LayoutDashboard, BedDouble, Users, Receipt,
   UtensilsCrossed, MessageSquareWarning,
-  Bell, BarChart3, Settings, LogOut, Phone, Sparkles
+  Bell, BarChart3, Settings, LogOut, Phone, Sparkles, Wallet
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuthStore } from "@/store/authStore";
@@ -13,6 +13,14 @@ import {
   SidebarFooter, useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { getDashboardData } from "@/api/analytics.api";
+import { getRooms } from "@/api/room.api";
+import { getTenants, getMyDetails } from "@/api/tenant.api";
+import { getBills, getMyBills } from "@/api/billing.api";
+import { getExpenses, getExpenseSummary } from "@/api/expense.api";
+import { getMenu } from "@/api/foodMenu.api";
+import { getComplaints, getMyComplaints } from "@/api/complaint.api";
 
 const adminItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -20,6 +28,7 @@ const adminItems = [
   { title: "Billing", url: "/billing", icon: Receipt },
   { title: "Food Menu", url: "/food-menu", icon: UtensilsCrossed },
   { title: "Complaints", url: "/complaints", icon: MessageSquareWarning },
+  { title: "Expenses", url: "/expenses", icon: Wallet },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
@@ -49,6 +58,46 @@ export function AppSidebar() {
   const handleNavClick = () => {
     if (isMobile) {
       setOpenMobile(false);
+    }
+  };
+
+  const queryClient = useQueryClient();
+
+  const handlePrefetch = (url: string) => {
+    const year = new Date().getFullYear().toString();
+    const month = (new Date().getMonth() + 1).toString();
+
+    const prefetchMap: Record<string, () => void> = {
+      "/dashboard": () => queryClient.prefetchQuery({ queryKey: ["dashboard"], queryFn: getDashboardData }),
+      "/rooms": () => queryClient.prefetchQuery({ queryKey: ["rooms"], queryFn: getRooms }),
+      "/tenants": () => queryClient.prefetchQuery({ queryKey: ["tenants"], queryFn: getTenants }),
+      "/billing": () => queryClient.prefetchQuery({ queryKey: ["bills"], queryFn: getBills }),
+      "/expenses": () => {
+        queryClient.prefetchQuery({ 
+          queryKey: ["expenses", year, month], 
+          queryFn: () => getExpenses({ 
+            startDate: `${year}-${month.padStart(2, '0')}-01`,
+            endDate: new Date(Number(year), Number(month), 0).toISOString().split("T")[0]
+          }) 
+        });
+        queryClient.prefetchQuery({ queryKey: ["expense-summary", year, month], queryFn: () => getExpenseSummary({ year, month }) });
+      },
+      "/analytics": () => queryClient.prefetchQuery({ queryKey: ["dashboard"], queryFn: getDashboardData }),
+      "/complaints": () => queryClient.prefetchQuery({ queryKey: ["complaints"], queryFn: getComplaints }),
+      
+      // Tenant routes
+      "/tenant/dashboard": () => {
+        queryClient.prefetchQuery({ queryKey: ["dashboard"], queryFn: getDashboardData });
+        queryClient.prefetchQuery({ queryKey: ["tenant-me"], queryFn: getMyDetails });
+      },
+      "/tenant/bills": () => queryClient.prefetchQuery({ queryKey: ["my-bills"], queryFn: getMyBills }),
+      "/tenant/menu": () => queryClient.prefetchQuery({ queryKey: ["menu"], queryFn: getMenu }),
+      "/tenant/complaints": () => queryClient.prefetchQuery({ queryKey: ["my-complaints"], queryFn: getMyComplaints }),
+    };
+
+    if (prefetchMap[url]) {
+      console.log(`[Prefetch] Triggering for ${url}`);
+      prefetchMap[url]();
     }
   };
 
@@ -94,6 +143,7 @@ export function AppSidebar() {
                       to={item.url}
                       end={item.url.includes("dashboard")}
                       onClick={handleNavClick}
+                      onMouseEnter={() => handlePrefetch(item.url)}
                       className={cn(
                         "group relative flex items-center gap-3 rounded-xl px-4 py-6 transition-all duration-300",
                         "hover:bg-primary/10 hover:text-primary"

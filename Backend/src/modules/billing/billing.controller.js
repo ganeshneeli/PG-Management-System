@@ -6,8 +6,18 @@ const redis = require("../../config/redis");
 class BillingController {
     async getAllBills(req, res, next) {
         try {
-            const bills = await billingService.getAllBills();
-            res.status(200).json({ success: true, count: bills.length, data: bills });
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 50;
+            
+            const result = await billingService.getAllBills(page, limit);
+            res.status(200).json({ 
+                success: true, 
+                count: result.data.length,
+                total: result.total,
+                page: result.page,
+                totalPages: result.totalPages,
+                data: result.data 
+            });
         } catch (error) {
             next(error);
         }
