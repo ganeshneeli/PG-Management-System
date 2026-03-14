@@ -1,15 +1,28 @@
 import { io } from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5001";
+const getSocketURL = () => {
+    const envUrl = import.meta.env.VITE_SOCKET_URL;
+    if (envUrl) return envUrl;
+
+    const apiUrl = import.meta.env.VITE_API_URL;
+    if (apiUrl) {
+        // Fallback: Use API origin (e.g., https://api.example.com/api/v1 -> https://api.example.com)
+        return apiUrl.replace(/\/api\/v1\/?$/, "");
+    }
+
+    return "http://localhost:5001";
+};
+
+const SOCKET_URL = getSocketURL();
 
 export const socket = io(SOCKET_URL, {
     autoConnect: false,
     reconnection: true,
-    reconnectionAttempts: 10,
+    reconnectionAttempts: 15,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
-    timeout: 20000,
-    transports: ["websocket"] // Force websocket to avoid polling issues on Render
+    timeout: 30000,
+    transports: ["websocket"] // Essential for Render to avoid polling upgrades failing
 });
 
 export const connectSocket = (userId: string) => {

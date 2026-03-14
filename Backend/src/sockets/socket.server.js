@@ -6,10 +6,11 @@ exports.init = (server) => {
     io = socketIo(server, {
         cors: {
             origin: "*",
-            methods: ["GET", "POST"]
+            methods: ["GET", "POST"],
+            credentials: true
         },
-        pingTimeout: 60000, // Longer timeout for stability
-        pingInterval: 25000, // Frequent heartbeats
+        pingTimeout: 60000,
+        pingInterval: 25000,
         connectTimeout: 45000,
         transports: ["websocket", "polling"]
     });
