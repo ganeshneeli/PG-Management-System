@@ -22,7 +22,7 @@ export default function LoginPage() {
               <BedDouble className="h-12 w-12 text-primary-foreground" />
             </div>
           </div>
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">Welcome to Modern PG</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">Welcome to Lakshmi Pujitha LADIES PG</h1>
           <p className="text-xl text-muted-foreground">Select your portal to continue</p>
         </div>
 
@@ -55,7 +55,7 @@ export default function LoginPage() {
         </div>
 
         <div className="pt-8 text-sm text-muted-foreground">
-          © 2026 Modern PG. Premium living for urban professionals.
+          © 2026 Lakshmi Pujitha LADIES PG. Premium living for urban professionals.
         </div>
       </div>
     </div>

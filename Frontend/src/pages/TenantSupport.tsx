@@ -22,21 +22,21 @@ export default function TenantSupport() {
                             <MapPin className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                             <div>
                                 <p className="font-semibold text-sm">PG Address</p>
-                                <p className="text-sm text-muted-foreground">123, Luxury Living PG, Near Tech Park, HSR Layout, Bengaluru - 560102</p>
+                                <p className="text-sm text-muted-foreground">#16, Manjunatha Layout, Munnekollala Main Road, Marathahalli, Bangalore - 560037</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
                             <Phone className="h-5 w-5 text-muted-foreground shrink-0" />
                             <div>
                                 <p className="font-semibold text-sm">Manager Phone</p>
-                                <p className="text-sm text-muted-foreground">+91 91234 56789</p>
+                                <p className="text-sm text-muted-foreground">+91 7989868757, 9573171253</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
                             <Mail className="h-5 w-5 text-muted-foreground shrink-0" />
                             <div>
                                 <p className="font-semibold text-sm">Email Support</p>
-                                <p className="text-sm text-muted-foreground">support@modernpg.com</p>
+                                <p className="text-sm text-muted-foreground">pujitha@lakshmipujithapg.com</p>
                             </div>
                         </div>
                     </CardContent>
@@ -50,7 +50,7 @@ export default function TenantSupport() {
                     </CardHeader>
                     <CardContent className="space-y-3">
                         <Button className="w-full justify-start py-6" variant="outline" asChild>
-                            <a href="tel:+919123456789">
+                            <a href="tel:+917989868757">
                                 <Phone className="mr-3 h-5 w-5 text-green-600" />
                                 <div className="text-left">
                                     <p className="font-bold">Call Manager</p>
@@ -59,7 +59,7 @@ export default function TenantSupport() {
                             </a>
                         </Button>
                         <Button className="w-full justify-start py-6" variant="outline" asChild>
-                            <a href="https://wa.me/919123456789" target="_blank" rel="noreferrer">
+                            <a href="https://wa.me/917989868757" target="_blank" rel="noreferrer">
                                 <MessageSquare className="mr-3 h-5 w-5 text-green-500" />
                                 <div className="text-left">
                                     <p className="font-bold">WhatsApp Support</p>

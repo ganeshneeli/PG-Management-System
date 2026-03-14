@@ -25,7 +25,7 @@ export function Navbar() {
         <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
           <Sparkles className="h-5 w-5 text-white" />
         </div>
-        <span className="text-sm font-black tracking-tighter">MODERN PG</span>
+        <span className="text-sm font-black tracking-tighter">LAKSHMI PUJITHA LADIES PG</span>
       </div>
 
       <div className="hidden flex-1 md:block">

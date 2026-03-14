@@ -60,7 +60,7 @@ export default function AdminLoginPage() {
                     <div className="space-y-2 text-center">
                         <div className="mb-6 flex items-center justify-center gap-2">
                             <BedDouble className="h-8 w-8 text-primary" />
-                            <span className="text-2xl font-bold">Modern PG</span>
+                            <span className="text-2xl font-bold">Lakshmi Pujitha LADIES PG</span>
                         </div>
                         <h2 className="text-3xl font-bold tracking-tight">Admin Portal</h2>
                         <p className="text-sm text-muted-foreground">Sign in to manage your property</p>

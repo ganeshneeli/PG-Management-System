@@ -22,10 +22,10 @@ export default function LandingPage() {
                         <div className="bg-primary p-2 rounded-xl shadow-lg shadow-primary/20">
                             <BedDouble className="h-6 w-6 text-white" />
                         </div>
-                        <span className="text-xl font-black tracking-tighter">MODERN PG</span>
+                        <span className="text-xl font-black tracking-tighter">LAKSHMI PUJITHA LADIES PG</span>
                     </div>
                     <nav className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-muted-foreground">
-                        <a href="#features" className="hover:text-primary transition-colors">Features</a>
+                        <a href="#features" className="hover:text-primary transition-colors">Amenities</a>
                         <a href="#rooms" className="hover:text-primary transition-colors">Rooms</a>
                         <a href="#contact" className="hover:text-primary transition-colors">Contact</a>
                     </nav>
@@ -51,7 +51,7 @@ export default function LandingPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-[0.2em]"
                             >
-                                <Sparkles className="h-4 w-4" /> Premium Co-living Experience
+                                <Sparkles className="h-4 w-4" /> Pavan Kumar & Lakshmi Pujitha
                             </motion.div>
                             <motion.h1
                                 initial={{ opacity: 0, y: 20 }}
@@ -59,17 +59,16 @@ export default function LandingPage() {
                                 transition={{ delay: 0.1 }}
                                 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9]"
                             >
-                                Live Smart.<br />
-                                <span className="text-primary italic">Live Premium.</span>
+                                Lakshmi Pujitha<br />
+                                <span className="text-primary italic">LADIES PG</span>
                             </motion.h1>
                             <motion.p
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="text-xl text-muted-foreground max-w-2xl mx-auto font-medium"
+                                className="text-2xl text-primary font-black uppercase tracking-widest"
                             >
-                                Discover a new way of living with Modern PG. High-speed internet, premium amenities,
-                                and a community of like-minded professionals awaiting you.
+                                Luxury Rooms Available
                             </motion.p>
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
@@ -78,11 +77,17 @@ export default function LandingPage() {
                                 className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6"
                             >
                                 <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-2xl shadow-primary/40 font-black" asChild>
-                                    <Link to="/tenant/login">Enter Tenant Portal <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                                    <Link to="/tenant/login">Book Your Room <ArrowRight className="ml-2 h-5 w-5" /></Link>
                                 </Button>
-                                <Button size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full border-2 font-black" asChild>
-                                    <Link to="/admin/login">Manage My Property</Link>
-                                </Button>
+                                <div className="flex flex-col items-start gap-1 px-8">
+                                    <div className="flex items-center gap-2 text-xl font-black">
+                                        <Phone className="h-5 w-5 text-primary" />
+                                        7989868757
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xl font-black pl-7">
+                                        9573171253
+                                    </div>
+                                </div>
                             </motion.div>
                         </div>
                     </div>
@@ -91,22 +96,31 @@ export default function LandingPage() {
                 {/* Features */}
                 <section id="features" className="py-24 bg-white dark:bg-slate-900">
                     <div className="container mx-auto px-6">
-                        <div className="grid md:grid-cols-3 gap-12">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl font-black tracking-tighter mb-4">World-Class <span className="text-primary italic">Amenities</span></h2>
+                        </div>
+                        <div className="grid md:grid-cols-3 gap-8">
                             {[
-                                { title: "Ultra Fast WiFi", desc: "1GBPS fiber connection to keep you connected and productive.", icon: Wifi },
-                                { title: "Premium Food", desc: "Healthy, diverse menus prepared by professional chefs daily.", icon: Utensils },
-                                { title: "Daily Cleaning", desc: "Our staff ensures your room is spotless every single day.", icon: CheckCircle2 },
+                                { title: "Biometric Entry", desc: "Advanced security with fingerprint access for residents.", icon: Zap },
+                                { title: "Lift Facility", desc: "Easy access to all floors with modern elevator systems.", icon: ArrowRight },
+                                { title: "CCTV Surveillance", desc: "24/7 monitoring for your complete safety and peace of mind.", icon: CheckCircle2 },
+                                { title: "Self Cooking", desc: "Well-equipped kitchen space for those who love to cook.", icon: Utensils },
+                                { title: "Attached Bathroom", desc: "Private, clean, and modern bathrooms in every room.", icon: BedDouble },
+                                { title: "Homely Food", desc: "Delicious, nutritious meals served in a clean environment.", icon: Utensils },
+                                { title: "WiFi", desc: "High-speed internet connectivity across the entire premises.", icon: Wifi },
+                                { title: "24/7 Water", desc: "Uninterrupted hot and cold water supply round the clock.", icon: Zap },
+                                { title: "Nearby IT Companies", desc: "Prime location close to major IT hubs and companies.", icon: MapPin },
                             ].map((f, i) => (
                                 <motion.div
                                     key={f.title}
-                                    whileHover={{ y: -10 }}
-                                    className="p-8 rounded-[2.5rem] bg-slate-50 dark:bg-slate-800 border transition-all hover:shadow-2xl hover:shadow-primary/5"
+                                    whileHover={{ y: -5 }}
+                                    className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-800 border transition-all hover:shadow-xl"
                                 >
-                                    <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6">
-                                        <f.icon className="h-7 w-7" />
+                                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4">
+                                        <f.icon className="h-6 w-6" />
                                     </div>
-                                    <h3 className="text-2xl font-black mb-2">{f.title}</h3>
-                                    <p className="text-muted-foreground font-medium leading-relaxed">{f.desc}</p>
+                                    <h3 className="text-xl font-black mb-2">{f.title}</h3>
+                                    <p className="text-muted-foreground font-medium text-sm leading-relaxed">{f.desc}</p>
                                 </motion.div>
                             ))}
                         </div>
@@ -120,22 +134,27 @@ export default function LandingPage() {
                             <div className="space-y-4">
                                 <h2 className="text-5xl font-black tracking-tighter">Available <span className="text-primary italic">Units</span></h2>
                                 <p className="text-xl text-muted-foreground font-medium max-w-xl">
-                                    Meticulously designed spaces tailored for modern professionals.
+                                    Luxury living spaces specifically designed for women.
                                 </p>
                             </div>
-                            <Button variant="ghost" className="font-bold text-primary">View All Rooms <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                            <Button variant="ghost" className="font-bold text-primary">Explore All <ArrowRight className="ml-2 h-4 w-4" /></Button>
                         </div>
                         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                             {[
-                                { name: "Studio Deluxe", price: "12,000", type: "Single" },
-                                { name: "Executive Suite", price: "8,500", type: "Double Sharing" },
-                                { name: "Urban Shared", price: "6,000", type: "Triple Sharing" }
+                                { name: "Luxury Single", price: "15,000", type: "Single Sharing", image: "/assets/rooms/single.png" },
+                                { name: "Premium Double", price: "10,000", type: "Double Sharing", image: "/assets/rooms/double.png" },
+                                { name: "Elite Triple", price: "8,000", type: "Triple Sharing", image: "/assets/rooms/triple.png" }
                             ].map((room) => (
                                 <motion.div
                                     key={room.name}
                                     whileHover={{ scale: 1.02 }}
                                     className="group relative h-[450px] rounded-[3rem] overflow-hidden bg-slate-200"
                                 >
+                                    <img
+                                        src={room.image}
+                                        alt={room.name}
+                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                                     <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                     <div className="absolute bottom-0 p-10 w-full space-y-4">
@@ -161,63 +180,123 @@ export default function LandingPage() {
             {/* CTA Section */}
             <section className="bg-primary py-24 text-primary-foreground relative overflow-hidden">
                 <div className="container mx-auto px-6 text-center space-y-8 relative z-10">
-                    <h2 className="text-5xl font-black tracking-tighter">Ready to Experience the Best PG Living?</h2>
+                    <h2 className="text-5xl font-black tracking-tighter">Ready to Experience Premium Living?</h2>
                     <p className="text-xl font-medium opacity-90 max-w-2xl mx-auto">
-                        Contact us today for a free tour or book your room online.
-                        Join our community of elite professionals.
+                        Contact us today for a tour or book your room online.
                     </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <div className="flex items-center gap-3 bg-white/10 px-6 py-4 rounded-full backdrop-blur-md">
-                            <Phone className="h-6 w-6" />
-                            <span className="text-xl font-black">+91 98765 43210</span>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="flex items-center gap-3 bg-white/10 px-6 py-4 rounded-full backdrop-blur-md">
+                                <Phone className="h-6 w-6" />
+                                <span className="text-2xl font-black">7989868757</span>
+                            </div>
                         </div>
-                        <Button size="lg" variant="secondary" className="h-16 px-10 rounded-full font-black text-lg">
-                            Schedule a Tour
-                        </Button>
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="flex items-center gap-3 bg-white/10 px-6 py-4 rounded-full backdrop-blur-md">
+                                <Phone className="h-6 w-6" />
+                                <span className="text-2xl font-black">9573171253</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Footer */}
-            <footer id="contact" className="bg-slate-900 py-20 text-white">
-                <div className="container mx-auto px-6">
-                    <div className="grid md:grid-cols-4 gap-12 mb-20">
+            {/* Footer Section */}
+            <footer id="contact" className="bg-slate-900 pt-20 text-white">
+                <div className="container mx-auto px-6 border-b border-white/5 pb-20">
+                    <div className="grid md:grid-cols-4 gap-12">
                         <div className="space-y-6">
                             <div className="flex items-center gap-2">
                                 <BedDouble className="h-8 w-8 text-primary" />
-                                <span className="text-2xl font-black">MODERN PG</span>
+                                <span className="text-2xl font-black leading-tight">LAKSHMI PUJITHA<br />LADIES PG</span>
                             </div>
                             <p className="text-slate-400 font-medium">
-                                Redefining the standard of urban living for professionals across the globe.
+                                Luxury accommodation for women, providing a safe, clean, and premium living environment.
                             </p>
                         </div>
                         <div>
-                            <h4 className="text-lg font-bold mb-6">Explore</h4>
+                            <h4 className="text-lg font-bold mb-6">Quick Links</h4>
                             <ul className="space-y-4 text-slate-400 font-medium">
-                                <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
-                                <li><a href="#" className="hover:text-primary transition-colors">Our PG Locations</a></li>
-                                <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
+                                <li><a href="#features" className="hover:text-primary transition-colors">Amenities</a></li>
+                                <li><a href="#rooms" className="hover:text-primary transition-colors">Available Rooms</a></li>
+                                <li><Link to="/tenant/login" className="hover:text-primary transition-colors">Resident Portal</Link></li>
                             </ul>
                         </div>
                         <div>
-                            <h4 className="text-lg font-bold mb-6">Residents</h4>
+                            <h4 className="text-lg font-bold mb-6">Connect</h4>
                             <ul className="space-y-4 text-slate-400 font-medium">
-                                <li><Link to="/tenant/login" className="hover:text-primary transition-colors">Login Portal</Link></li>
-                                <li><a href="#" className="hover:text-primary transition-colors">Support Center</a></li>
-                                <li><a href="#" className="hover:text-primary transition-colors">House Rules</a></li>
+                                <li className="font-bold text-white">Pavan Kumar</li>
+                                <li className="font-bold text-white">Lakshmi Pujitha</li>
+                                <li className="flex items-center gap-2 font-bold text-primary">+91 7989868757</li>
+                                <li className="flex items-center gap-2 font-bold text-primary">+91 9573171253</li>
                             </ul>
                         </div>
                         <div>
-                            <h4 className="text-lg font-bold mb-6">Contact</h4>
+                            <h4 className="text-lg font-bold mb-6">Location</h4>
                             <ul className="space-y-4 text-slate-400 font-medium">
-                                <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" /> HSR Layout, Bengaluru</li>
-                                <li className="flex items-center gap-2 font-bold">+91 91234 56789</li>
-                                <li className="underline text-primary">mgr@modernpg.com</li>
+                                <li className="flex items-start gap-2">
+                                    <MapPin className="h-5 w-5 text-primary shrink-0 mt-1" />
+                                    <span>#16, Manjunatha Layout,<br />Munnekollala Main Road,<br />Marathahalli, Bangalore - 560037</span>
+                                </li>
                             </ul>
                         </div>
                     </div>
-                    <div className="pt-8 border-t border-slate-800 text-center text-slate-500 text-sm font-bold">
-                        © 2026 MODERN PG SYSTEM. BUILT FOR PREMIUM LIVING.
+                </div>
+
+                {/* Fingrow Branded Footer */}
+                <div className="py-12 text-center flex flex-col items-center gap-6 bg-slate-950/50">
+                    {/* Logo */}
+                    <img
+                        src="/fingrow-logo.png"
+                        alt="Fingrow Consulting Services"
+                        loading="lazy"
+                        className="w-40 object-contain"
+                    />
+
+                    {/* Copyright */}
+                    <div className="text-white/70 text-sm leading-relaxed">
+                        <p>© 2026 Fingrow Consulting Services Pvt Ltd. All rights reserved.</p>
+                        <p className="text-white/50">
+                            QR-Based Smart Dine-In Ordering System developed by Fingrow Technology Team.
+                        </p>
+                    </div>
+
+                    {/* Contact */}
+                    <div className="flex flex-col gap-1 text-white/60 text-sm">
+                        <p>
+                            📞 <span className="font-medium">Call / WhatsApp:</span>{" "}
+                            <a href="tel:+919187135171" className="hover:text-white">
+                                +91 9187135171
+                            </a>
+                        </p>
+
+                        <p>
+                            📧 <span className="font-medium">Email Us:</span>{" "}
+                            <a href="mailto:contact@fingrow.in" className="hover:text-white">
+                                contact@fingrow.in
+                            </a>{" "}
+                            |{" "}
+                            <a href="mailto:harish.m@fingrow.in" className="hover:text-white">
+                                harish.m@fingrow.in
+                            </a>
+                        </p>
+                    </div>
+                    <div className="flex gap-6 text-sm text-white/60">
+                        <a
+                            href="https://www.linkedin.com/company/fingrowconsulting/posts/?feedView=all"
+                            target="_blank"
+                            className="hover:text-white"
+                        >
+                            🔗 LinkedIn
+                        </a>
+
+                        <a
+                            href="https://www.instagram.com/fingrow_technologies?igsh=MWJheXlybjR6MjFhOA%3D%3D"
+                            target="_blank"
+                            className="hover:text-white"
+                        >
+                            📸 Instagram
+                        </a>
                     </div>
                 </div>
             </footer>

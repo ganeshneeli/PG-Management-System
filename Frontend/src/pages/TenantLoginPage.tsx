@@ -56,7 +56,7 @@ export default function TenantLoginPage() {
                 <div className="relative z-10 text-primary-foreground space-y-6 max-w-md">
                     <div className="flex items-center gap-3">
                         <BedDouble className="h-10 w-10" />
-                        <span className="text-3xl font-bold italic">Modern PG</span>
+                        <span className="text-3xl font-bold italic">Lakshmi Pujitha LADIES PG</span>
                     </div>
                     <h1 className="text-5xl font-extrabold leading-tight">Your Home,<br />digitized.</h1>
                     <p className="text-xl opacity-80">Track your bills, report issues, and view menus with a single tap.</p>

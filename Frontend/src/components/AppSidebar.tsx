@@ -119,7 +119,7 @@ export function AppSidebar() {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-xl font-black tracking-tight text-white">
-                    MODERN PG
+                    LAKSHMI PUJITHA LADIES PG
                   </span>
                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
                     {user?.role === "admin" ? "Admin Panel" : "Resident Portal"}
