@@ -13,7 +13,7 @@ const getSocketURL = () => {
     return "http://localhost:5001";
 };
 
-const SOCKET_URL = getSocketURL();
+export const SOCKET_URL = getSocketURL();
 
 export const socket = io(SOCKET_URL, {
     autoConnect: false,

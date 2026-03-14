@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { QueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { connectSocket, socket, disconnectSocket } from "@/api/socket";
+import { connectSocket, socket, disconnectSocket, SOCKET_URL } from "@/api/socket";
 import { useNotificationStore } from "@/store/notificationStore";
 
 export const useSocketSync = (user: any, isAuthenticated: boolean, queryClient: QueryClient) => {
@@ -27,11 +27,16 @@ export const useSocketSync = (user: any, isAuthenticated: boolean, queryClient: 
 
       const onConnectError = (err: any) => {
         console.error("[Socket] Connection Error:", err.message);
-        toast.error("Live Sync Lost", { 
-          description: "Real-time updates are temporarily unavailable.",
-          duration: 4000
-        });
+        // We only show the error toast for actual connection failures, not expected retries
+        if (err.message !== "websocket error") {
+           toast.error("Live Sync Lost", { 
+             description: "Real-time updates are temporarily unavailable.",
+             duration: 4000
+           });
+        }
       };
+
+      console.log("[Socket] Attempting connection to:", SOCKET_URL);
 
       socket.on("connect", onConnect);
       socket.on("disconnect", onDisconnect);
