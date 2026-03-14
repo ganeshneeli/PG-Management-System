@@ -14,9 +14,9 @@ export default function LandingPage() {
         return <Navigate to={user.role === "admin" ? "/dashboard" : "/tenant/dashboard"} replace />;
     }
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 overflow-x-hidden">
+        <div className="min-h-screen bg-background overflow-x-hidden">
             {/* Header */}
-            <header className="fixed top-0 z-50 w-full border-b bg-white/60 backdrop-blur-xl dark:bg-slate-950/60">
+            <header className="fixed top-0 z-50 w-full border-b bg-background/60 backdrop-blur-xl">
                 <div className="container mx-auto flex h-20 items-center justify-between px-6">
                     <div className="flex items-center gap-2">
                         <div className="bg-primary p-2 rounded-xl shadow-lg shadow-primary/20">
@@ -30,7 +30,7 @@ export default function LandingPage() {
                         <a href="#contact" className="hover:text-primary transition-colors">Contact</a>
                     </nav>
                     <div className="flex items-center gap-4">
-                        <Button variant="ghost" asChild className="hidden sm:flex font-bold">
+                        <Button variant="ghost" asChild className="hidden sm:flex font-bold hover:bg-primary/10 hover:text-primary">
                             <Link to="/tenant/login">Resident Login</Link>
                         </Button>
                         <Button asChild className="rounded-full px-6 shadow-xl shadow-primary/20 font-bold">
@@ -43,13 +43,13 @@ export default function LandingPage() {
             <main>
                 {/* Hero Section */}
                 <section className="relative pt-40 pb-20 md:pt-60 md:pb-40">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-primary/10 to-transparent blur-[120px] -z-10" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-primary/15 via-primary/5 to-transparent blur-[120px] -z-10" />
                     <div className="container mx-auto px-6">
                         <div className="max-w-4xl mx-auto text-center space-y-8">
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-[0.2em]"
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/15 text-primary text-xs font-black uppercase tracking-[0.2em]"
                             >
                                 <Sparkles className="h-4 w-4" /> Pavan Kumar & Lakshmi Pujitha
                             </motion.div>
@@ -80,11 +80,11 @@ export default function LandingPage() {
                                     <Link to="/tenant/login">Book Your Room <ArrowRight className="ml-2 h-5 w-5" /></Link>
                                 </Button>
                                 <div className="flex flex-col items-start gap-1 px-8">
-                                    <div className="flex items-center gap-2 text-xl font-black">
-                                        <Phone className="h-5 w-5 text-primary" />
+                                    <div className="flex items-center gap-2 text-xl font-black text-primary">
+                                        <Phone className="h-5 w-5" />
                                         7989868757
                                     </div>
-                                    <div className="flex items-center gap-2 text-xl font-black pl-7">
+                                    <div className="flex items-center gap-2 text-xl font-black text-primary pl-7">
                                         9573171253
                                     </div>
                                 </div>
@@ -94,7 +94,7 @@ export default function LandingPage() {
                 </section>
 
                 {/* Features */}
-                <section id="features" className="py-24 bg-white dark:bg-slate-900">
+                <section id="features" className="py-24 bg-card outline outline-1 outline-primary/5">
                     <div className="container mx-auto px-6">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-black tracking-tighter mb-4">World-Class <span className="text-primary italic">Amenities</span></h2>
@@ -114,9 +114,9 @@ export default function LandingPage() {
                                 <motion.div
                                     key={f.title}
                                     whileHover={{ y: -5 }}
-                                    className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-800 border transition-all hover:shadow-xl"
+                                    className="p-8 rounded-3xl bg-background border border-primary/10 transition-all hover:shadow-2xl hover:shadow-primary/5"
                                 >
-                                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4">
+                                    <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center text-primary mb-6">
                                         <f.icon className="h-6 w-6" />
                                     </div>
                                     <h3 className="text-xl font-black mb-2">{f.title}</h3>
@@ -128,7 +128,7 @@ export default function LandingPage() {
                 </section>
 
                 {/* Rooms Grid */}
-                <section id="rooms" className="py-24 relative overflow-hidden">
+                <section id="rooms" className="py-24 relative overflow-hidden bg-background">
                     <div className="container mx-auto px-6">
                         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
                             <div className="space-y-4">
@@ -137,7 +137,7 @@ export default function LandingPage() {
                                     Luxury living spaces specifically designed for women.
                                 </p>
                             </div>
-                            <Button variant="ghost" className="font-bold text-primary">Explore All <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                            <Button variant="ghost" className="font-bold text-primary hover:bg-primary/10">Explore All <ArrowRight className="ml-2 h-4 w-4" /></Button>
                         </div>
                         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                             {[
@@ -148,7 +148,7 @@ export default function LandingPage() {
                                 <motion.div
                                     key={room.name}
                                     whileHover={{ scale: 1.02 }}
-                                    className="group relative h-[450px] rounded-[3rem] overflow-hidden bg-slate-200"
+                                    className="group relative h-[450px] rounded-[3rem] overflow-hidden bg-muted/30 border border-primary/5"
                                 >
                                     <img
                                         src={room.image}
@@ -160,15 +160,15 @@ export default function LandingPage() {
                                     <div className="absolute bottom-0 p-10 w-full space-y-4">
                                         <div className="flex justify-between items-end">
                                             <div>
-                                                <p className="text-primary-foreground/60 text-xs font-black uppercase tracking-widest">{room.type}</p>
+                                                <p className="text-primary-foreground/80 text-xs font-black uppercase tracking-widest">{room.type}</p>
                                                 <h3 className="text-3xl font-black text-white">{room.name}</h3>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-white font-black text-2xl">₹{room.price}</p>
+                                                <p className="text-primary font-black text-2xl">₹{room.price}</p>
                                                 <p className="text-white/60 text-[10px] font-bold">/ Month</p>
                                             </div>
                                         </div>
-                                        <Button className="w-full h-12 rounded-full bg-white text-black hover:bg-primary hover:text-white font-black">Book Now</Button>
+                                        <Button className="w-full h-12 rounded-full bg-white text-primary hover:bg-primary hover:text-white font-black shadow-lg">Book Now</Button>
                                     </div>
                                 </motion.div>
                             ))}
@@ -179,6 +179,7 @@ export default function LandingPage() {
 
             {/* CTA Section */}
             <section className="bg-primary py-24 text-primary-foreground relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent)]" />
                 <div className="container mx-auto px-6 text-center space-y-8 relative z-10">
                     <h2 className="text-5xl font-black tracking-tighter">Ready to Experience Premium Living?</h2>
                     <p className="text-xl font-medium opacity-90 max-w-2xl mx-auto">
@@ -186,13 +187,13 @@ export default function LandingPage() {
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
                         <div className="flex flex-col items-center gap-2">
-                            <div className="flex items-center gap-3 bg-white/10 px-6 py-4 rounded-full backdrop-blur-md">
+                            <div className="flex items-center gap-3 bg-white/10 px-6 py-4 rounded-full backdrop-blur-md border border-white/20">
                                 <Phone className="h-6 w-6" />
                                 <span className="text-2xl font-black">7989868757</span>
                             </div>
                         </div>
                         <div className="flex flex-col items-center gap-2">
-                            <div className="flex items-center gap-3 bg-white/10 px-6 py-4 rounded-full backdrop-blur-md">
+                            <div className="flex items-center gap-3 bg-white/10 px-6 py-4 rounded-full backdrop-blur-md border border-white/20">
                                 <Phone className="h-6 w-6" />
                                 <span className="text-2xl font-black">9573171253</span>
                             </div>
@@ -202,7 +203,7 @@ export default function LandingPage() {
             </section>
 
             {/* Footer Section */}
-            <footer id="contact" className="bg-slate-900 pt-20 text-white">
+            <footer id="contact" className="bg-[#11081f] pt-20 text-white">
                 <div className="container mx-auto px-6 border-b border-white/5 pb-20">
                     <div className="grid md:grid-cols-4 gap-12">
                         <div className="space-y-6">
@@ -215,7 +216,7 @@ export default function LandingPage() {
                             </p>
                         </div>
                         <div>
-                            <h4 className="text-lg font-bold mb-6">Quick Links</h4>
+                            <h4 className="text-lg font-bold mb-6 text-primary">Quick Links</h4>
                             <ul className="space-y-4 text-slate-400 font-medium">
                                 <li><a href="#features" className="hover:text-primary transition-colors">Amenities</a></li>
                                 <li><a href="#rooms" className="hover:text-primary transition-colors">Available Rooms</a></li>
@@ -223,7 +224,7 @@ export default function LandingPage() {
                             </ul>
                         </div>
                         <div>
-                            <h4 className="text-lg font-bold mb-6">Connect</h4>
+                            <h4 className="text-lg font-bold mb-6 text-primary">Connect</h4>
                             <ul className="space-y-4 text-slate-400 font-medium">
                                 <li className="font-bold text-white">Pavan Kumar</li>
                                 <li className="font-bold text-white">Lakshmi Pujitha</li>
@@ -232,7 +233,7 @@ export default function LandingPage() {
                             </ul>
                         </div>
                         <div>
-                            <h4 className="text-lg font-bold mb-6">Location</h4>
+                            <h4 className="text-lg font-bold mb-6 text-primary">Location</h4>
                             <ul className="space-y-4 text-slate-400 font-medium">
                                 <li className="flex items-start gap-2">
                                     <MapPin className="h-5 w-5 text-primary shrink-0 mt-1" />
@@ -244,25 +245,25 @@ export default function LandingPage() {
                 </div>
 
                 {/* Fingrow Branded Footer */}
-                <div className="py-12 text-center flex flex-col items-center gap-6 bg-slate-950/50">
+                <div className="py-12 text-center flex flex-col items-center gap-6 bg-black/40">
                     {/* Logo */}
                     <img
                         src="/fingrow-logo.png"
                         alt="Fingrow Consulting Services"
                         loading="lazy"
-                        className="w-40 object-contain"
+                        className="w-40 object-contain opacity-80"
                     />
 
                     {/* Copyright */}
-                    <div className="text-white/70 text-sm leading-relaxed">
+                    <div className="text-white/60 text-sm leading-relaxed">
                         <p>© 2026 Fingrow Consulting Services Pvt Ltd. All rights reserved.</p>
-                        <p className="text-white/50">
+                        <p className="text-white/40">
                             QR-Based Smart Dine-In Ordering System developed by Fingrow Technology Team.
                         </p>
                     </div>
 
                     {/* Contact */}
-                    <div className="flex flex-col gap-1 text-white/60 text-sm">
+                    <div className="flex flex-col gap-1 text-white/50 text-sm">
                         <p>
                             📞 <span className="font-medium">Call / WhatsApp:</span>{" "}
                             <a href="tel:+919187135171" className="hover:text-white">
@@ -281,7 +282,7 @@ export default function LandingPage() {
                             </a>
                         </p>
                     </div>
-                    <div className="flex gap-6 text-sm text-white/60">
+                    <div className="flex gap-6 text-sm text-white/40">
                         <a
                             href="https://www.linkedin.com/company/fingrowconsulting/posts/?feedView=all"
                             target="_blank"
