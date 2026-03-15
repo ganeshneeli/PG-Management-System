@@ -1,12 +1,13 @@
 const authRepository = require("./auth.repository");
 const jwt = require("jsonwebtoken");
 const env = require("../../config/env");
+const ErrorResponse = require("../../utils/errorResponse");
 
 class AuthService {
     async register(userData) {
         const existingUser = await authRepository.findUserByEmail(userData.email);
         if (existingUser) {
-            throw new Error("Email already exists");
+            throw new ErrorResponse("Email already exists", 400);
         }
         // In a real app we'd hash password here
         const user = await authRepository.createUser(userData);
@@ -23,7 +24,7 @@ class AuthService {
         }
 
         if (!user || user.password !== password) {
-            throw new Error("Invalid credentials");
+            throw new ErrorResponse("Invalid credentials", 401);
         }
         const token = jwt.sign({ id: user._id, role: user.role }, env.JWT_SECRET, { expiresIn: "1d" });
         return { token, user };

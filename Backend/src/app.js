@@ -43,7 +43,17 @@ const limiter = rateLimit({
 app.use(compression()); // Compress all responses
 app.use(limiter); // Apply rate limiting to all requests
 app.use(logger);
-app.use(cors());
+app.use(cors({
+    origin: [
+        process.env.FRONTEND_URL,
+        "http://localhost:8000",
+        "http://localhost:5173",
+        /\.render\.com$/
+    ].filter(Boolean),
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
