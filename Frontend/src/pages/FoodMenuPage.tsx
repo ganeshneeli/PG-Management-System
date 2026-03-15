@@ -41,7 +41,7 @@ export default function FoodMenuPage() {
             <QrCode className="mr-2 h-4 w-4" /> Regenerate QR
           </Button>
           <Button variant="outline" size="sm" asChild>
-            <a href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/uploads/menuQR.png`} target="_blank" rel="noreferrer">
+            <a href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'}/uploads/menuQR.png`} target="_blank" rel="noreferrer">
               <Download className="mr-2 h-4 w-4" /> Download QR
             </a>
           </Button>

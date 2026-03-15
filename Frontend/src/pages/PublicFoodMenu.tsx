@@ -3,7 +3,7 @@ import axios from "axios";
 import { Utensils, Clock } from "lucide-react";
 
 const getTodayMenu = async () => {
-    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
+    const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5001/api/v1";
     const { data } = await axios.get(`${baseUrl}/menu/today`);
     return data.data;
 };
