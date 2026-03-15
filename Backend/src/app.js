@@ -43,7 +43,17 @@ const limiter = rateLimit({
 app.use(compression()); // Compress all responses
 app.use(limiter); // Apply rate limiting to all requests
 app.use(logger);
-app.use(cors());
+
+app.use(cors({
+  origin: [
+    "https://fingrow.site",
+    "https://www.fingrow.site",
+    "http://localhost:5173",
+    "http://localhost:8000"
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
