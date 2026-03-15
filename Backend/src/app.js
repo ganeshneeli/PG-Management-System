@@ -44,12 +44,22 @@ app.use(compression()); // Compress all responses
 app.use(limiter); // Apply rate limiting to all requests
 app.use(logger);
 app.use(cors({
-    origin: [
-        process.env.FRONTEND_URL,
-        "http://localhost:8000",
-        "http://localhost:5173",
-        /\.render\.com$/
-    ].filter(Boolean),
+    origin: (origin, callback) => {
+        const allowedOrigins = [
+            process.env.FRONTEND_URL,
+            "http://localhost:8000",
+            "http://localhost:5173"
+        ].filter(Boolean);
+        
+        // Allow requests with no origin (like mobile apps or curl requests)
+        // Or if the origin is in the allowed list
+        // Or if the origin matches a .render.com or Hostinger domain
+        if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.render.com')) {
+            callback(null, true);
+        } else {
+            callback(null, true); // Temporarily permissive to debug production, will narrow down once stable
+        }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]

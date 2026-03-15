@@ -10,7 +10,7 @@ const getSocketURL = () => {
         return apiUrl.replace(/\/api\/v1\/?$/, "");
     }
 
-    return "http://localhost:5001";
+    return import.meta.env.MODE === 'development' ? "http://localhost:5001" : window.location.origin;
 };
 
 export const SOCKET_URL = getSocketURL();
