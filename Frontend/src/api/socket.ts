@@ -10,7 +10,12 @@ const getSocketURL = () => {
         return apiUrl.replace(/\/api\/v1\/?$/, "");
     }
 
-    return import.meta.env.MODE === 'development' ? "http://localhost:5001" : "https://pg-management-system-b6ak.onrender.com";
+    if (import.meta.env.MODE === 'development') {
+        return "http://localhost:5001";
+    }
+
+    // Production Fallback: Use the Render backend URL
+    return "https://pg-management-system-b6ak.onrender.com";
 };
 
 export const SOCKET_URL = getSocketURL();

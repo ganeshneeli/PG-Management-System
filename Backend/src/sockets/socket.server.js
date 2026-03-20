@@ -3,9 +3,17 @@ const socketIo = require("socket.io");
 let io;
 
 exports.init = (server) => {
+    const allowedOrigins = [
+        process.env.FRONTEND_URL,
+        "https://pgmanagmentsystem.netlify.app",
+        "http://localhost:5173",
+        "http://localhost:8000",
+        "http://127.0.0.1:5173"
+    ].filter(Boolean);
+
     io = socketIo(server, {
         cors: {
-            origin: "*",
+            origin: allowedOrigins,
             methods: ["GET", "POST"],
             credentials: true
         },
