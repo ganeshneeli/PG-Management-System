@@ -30,12 +30,11 @@ export const socket = io(SOCKET_URL, {
     transports: ["websocket"] // Essential for Render to avoid polling upgrades failing
 });
 
-export const connectSocket = (userId: string) => {
+export const connectSocket = () => {
     if (!socket.connected) {
         const token = localStorage.getItem("token");
         socket.auth = { token };
         socket.connect();
-        socket.emit("join", userId);
     }
 };
 

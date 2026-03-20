@@ -10,11 +10,12 @@ export const useSocketSync = (user: any, isAuthenticated: boolean, queryClient: 
   useEffect(() => {
     if (isAuthenticated && user) {
       console.log("[Socket] Connecting for user:", user._id);
-      connectSocket(user._id);
+      connectSocket();
 
       // Connection Status Listeners
       const onConnect = () => {
-        console.log("[Socket] Connected ✅");
+        console.log("[Socket] Connected ✅. Joining room...");
+        socket.emit("join", user._id);
       };
 
       const onDisconnect = (reason: string) => {
