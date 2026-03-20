@@ -40,10 +40,13 @@ export const useAuthStore = create<AuthState>((set) => {
       }
       set({ user, isAuthenticated: !!user });
     },
-    setAuth: (_token, user) => {
-      // We ignore the token parameter as it's handled by cookies
+    setAuth: (token, user) => {
+      // Store token in localStorage as fallback for cross-origin cookie issues
+      if (token) {
+        localStorage.setItem("token", token);
+      }
       localStorage.setItem("user", JSON.stringify(user));
-      set({ token: null, user, isAuthenticated: true });
+      set({ token, user, isAuthenticated: true });
     },
     logout: async () => {
       try {
