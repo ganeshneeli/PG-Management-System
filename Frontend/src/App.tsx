@@ -38,13 +38,13 @@ const TenantNotifications = lazy(() => import("@/pages/TenantNotifications"));
 const TenantSupport = lazy(() => import("@/pages/TenantSupport"));
 
 const rootQueryClient = new QueryClient({
-  defaultOptions: { 
-    queries: { 
-      retry: 1, 
+  defaultOptions: {
+    queries: {
+      retry: 1,
       refetchOnWindowFocus: false,
       staleTime: 1000 * 60, // 1 minute stale time
       gcTime: 1000 * 60 * 10, // 10 minutes cache time
-    } 
+    }
   },
 });
 

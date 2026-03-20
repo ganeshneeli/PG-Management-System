@@ -16,12 +16,14 @@ interface DashboardCardProps {
 export function DashboardCard({ title, value, icon: Icon, description, trend, className }: DashboardCardProps) {
   return (
     <motion.div
-      whileHover={{ y: -5, scale: 1.02 }}
+      whileHover={{ y: -8, scale: 1.02, rotateX: 2, rotateY: 2 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "relative overflow-hidden rounded-[2rem] border bg-gradient-to-br from-card to-card/50 p-7 shadow-sm transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10",
-        "before:absolute before:inset-0 before:bg-gradient-to-br before:from-primary/5 before:to-transparent before:opacity-0 hover:before:opacity-100",
+        "relative overflow-hidden rounded-[2.5rem] border bg-gradient-to-br from-card/80 to-card/40 p-8 shadow-sm backdrop-blur-md transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20",
+        "before:absolute before:inset-0 before:bg-gradient-to-br before:from-primary/10 before:to-transparent before:opacity-0 hover:before:opacity-100",
+        "after:absolute after:inset-0 after:rounded-[2.5rem] after:border after:border-white/20 after:opacity-0 hover:after:opacity-100",
         className
       )}
     >

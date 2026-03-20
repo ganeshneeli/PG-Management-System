@@ -113,7 +113,7 @@ export default function TenantDashboard() {
                     <div className="w-2 h-8 bg-primary rounded-full" />
                     <h3 className="font-black text-2xl tracking-tight italic">Stay <span className="not-italic">Details</span></h3>
                 </div>
-                
+
                 <div className="grid gap-10 md:grid-cols-3">
                     <div className="space-y-3 p-6 rounded-[2rem] bg-muted/30 border border-transparent hover:border-primary/20 transition-colors">
                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Check-in Date</p>

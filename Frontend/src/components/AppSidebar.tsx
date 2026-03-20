@@ -138,24 +138,29 @@ export function AppSidebar() {
             <SidebarMenu className="gap-1">
               {items.map((item, index) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={collapsed ? item.title : undefined}>
-                    <NavLink
-                      to={item.url}
-                      end={item.url.includes("dashboard")}
-                      onClick={handleNavClick}
-                      onMouseEnter={() => handlePrefetch(item.url)}
-                      className={cn(
-                        "group relative flex items-center gap-3 rounded-xl px-4 py-6 transition-all duration-300",
-                        "hover:bg-primary/10 hover:text-primary"
-                      )}
-                      activeClassName="bg-primary/15 text-primary before:absolute before:left-0 before:h-6 before:w-1 before:rounded-full before:bg-primary"
-                    >
-                      <item.icon className="h-5 w-5 shrink-0 transition-transform group-hover:scale-110" />
-                      {!collapsed && <span className="font-semibold">{item.title}</span>}
-                      {collapsed && <span className="sr-only">{item.title}</span>}
-                    </NavLink>
-
-                  </SidebarMenuButton>
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05, type: "spring", stiffness: 100 }}
+                  >
+                    <SidebarMenuButton asChild tooltip={collapsed ? item.title : undefined}>
+                      <NavLink
+                        to={item.url}
+                        end={item.url.includes("dashboard")}
+                        onClick={handleNavClick}
+                        onMouseEnter={() => handlePrefetch(item.url)}
+                        className={cn(
+                          "group relative flex items-center gap-3 rounded-xl px-4 py-6 transition-all duration-300",
+                          "hover:bg-primary/10 hover:text-primary"
+                        )}
+                        activeClassName="bg-primary/15 text-primary before:absolute before:left-0 before:h-6 before:w-1 before:rounded-full before:bg-primary"
+                      >
+                        <item.icon className="h-5 w-5 shrink-0 transition-transform group-hover:scale-110" />
+                        {!collapsed && <span className="font-semibold">{item.title}</span>}
+                        {collapsed && <span className="sr-only">{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </motion.div>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

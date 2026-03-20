@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getDashboardData } from "@/api/analytics.api";
 import { DashboardCard } from "@/components/DashboardCard";
-import { PageLoader } from "@/components/Loader";
 import { BedDouble, Users, DoorOpen, IndianRupee, AlertCircle, TrendingUp, Plus } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useState, useEffect } from "react";
@@ -13,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Megaphone, MessageSquareWarning, Clock, ChevronRight, UserPlus } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
 
 const COLORS = ["hsl(230, 80%, 56%)", "hsl(142, 71%, 45%)", "hsl(38, 92%, 50%)", "hsl(0, 72%, 51%)"];
 
@@ -24,8 +25,6 @@ export default function DashboardPage() {
 
   const [broadcast, setBroadcast] = useState({ title: "", message: "", type: "alert" });
   const [loading, setLoading] = useState(false);
-
-
 
   const handleBroadcast = async () => {
     if (!broadcast.title || !broadcast.message) return toast.error("Please fill all fields");
@@ -43,8 +42,6 @@ export default function DashboardPage() {
 
   const queryClient = useQueryClient();
 
-  if (isLoading) return <PageLoader />;
-
   const dashboard = data || {
     totalRooms: 0, occupiedRooms: 0, vacantRooms: 0, totalTenants: 0,
     monthlyRevenue: 0, totalRevenue: 0, collectedRevenue: 0, pendingRevenue: 0,
@@ -57,6 +54,31 @@ export default function DashboardPage() {
     occupancyChart: [],
   };
 
+  if (isLoading) {
+    return (
+      <div className="space-y-10 pb-10">
+        <div className="space-y-2">
+          <Skeleton className="h-10 w-48" />
+          <Skeleton className="h-4 w-64" />
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {[...Array(5)].map((_, i) => (
+            <Skeleton key={i} className="h-32 rounded-[2.5rem]" />
+          ))}
+        </div>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="h-24 rounded-xl" />
+          ))}
+        </div>
+        <div className="grid gap-6 lg:grid-cols-3">
+          <Skeleton className="col-span-2 h-[350px] rounded-xl" />
+          <Skeleton className="h-[350px] rounded-xl" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-10 pb-10">
       <div className="flex flex-col gap-2">
@@ -66,11 +88,11 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        <DashboardCard title="Total Rooms" value={dashboard.totalRooms} icon={BedDouble} />
-        <DashboardCard title="Occupied" value={dashboard.occupiedRooms} icon={DoorOpen} />
-        <DashboardCard title="Vacant" value={dashboard.vacantRooms} icon={BedDouble} />
-        <DashboardCard title="Pending Bills" value={dashboard.pendingPayments} icon={AlertCircle} />
-        <DashboardCard title="Total Revenue" value={`₹${((dashboard.totalRevenue || 0) / 1000).toFixed(1)}K`} icon={IndianRupee} />
+        <DashboardCard title="Total Rooms" value={<AnimatedCounter value={dashboard.totalRooms} />} icon={BedDouble} />
+        <DashboardCard title="Occupied" value={<AnimatedCounter value={dashboard.occupiedRooms} />} icon={DoorOpen} />
+        <DashboardCard title="Vacant" value={<AnimatedCounter value={dashboard.vacantRooms} />} icon={BedDouble} />
+        <DashboardCard title="Pending Bills" value={<AnimatedCounter value={dashboard.pendingPayments} />} icon={AlertCircle} />
+        <DashboardCard title="Total Revenue" value={<AnimatedCounter value={dashboard.totalRevenue / 1000} prefix="₹" suffix="K" />} icon={IndianRupee} />
       </div>
 
       {/* Revenue Breakdown */}
@@ -81,7 +103,9 @@ export default function DashboardPage() {
           </div>
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Total Revenue</p>
-            <p className="text-2xl font-black">₹{((dashboard.totalRevenue || 0)).toLocaleString()}</p>
+            <p className="text-2xl font-black">
+              <AnimatedCounter value={dashboard.totalRevenue || 0} prefix="₹" />
+            </p>
           </div>
         </div>
         <div className="rounded-xl border bg-card p-5 shadow-sm flex items-center gap-4">
@@ -90,7 +114,9 @@ export default function DashboardPage() {
           </div>
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Collected</p>
-            <p className="text-2xl font-black text-green-500">₹{((dashboard.collectedRevenue || 0)).toLocaleString()}</p>
+            <p className="text-2xl font-black text-green-500">
+              <AnimatedCounter value={dashboard.collectedRevenue || 0} prefix="₹" />
+            </p>
           </div>
         </div>
         <div className="rounded-xl border bg-card p-5 shadow-sm flex items-center gap-4">
@@ -99,7 +125,9 @@ export default function DashboardPage() {
           </div>
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Pending</p>
-            <p className="text-2xl font-black text-red-500">₹{((dashboard.pendingRevenue || 0)).toLocaleString()}</p>
+            <p className="text-2xl font-black text-red-500">
+              <AnimatedCounter value={dashboard.pendingRevenue || 0} prefix="₹" />
+            </p>
           </div>
         </div>
       </div>
@@ -128,7 +156,16 @@ export default function DashboardPage() {
           {dashboard.occupancyChart.some(d => d.value > 0) ? (
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
-                <Pie data={dashboard.occupancyChart} cx="50%" cy="50%" innerRadius={60} outerRadius={90} dataKey="value" label={({ name, value }) => `${name}: ${value}`}>
+                <Pie
+                  data={dashboard.occupancyChart}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={90}
+                  dataKey="value"
+                  nameKey="name"
+                  label={({ name, value }) => `${name}: ${value}`}
+                >
                   {dashboard.occupancyChart.map((_, index) => (
                     <Cell key={index} fill={COLORS[index % COLORS.length]} />
                   ))}

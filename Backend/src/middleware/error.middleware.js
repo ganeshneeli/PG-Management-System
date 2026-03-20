@@ -1,9 +1,20 @@
+const { winstonLogger } = require("./logger.middleware");
+
 exports.asyncHandler = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
 };
 
 exports.errorHandler = (err, req, res, next) => {
-    console.error(`[ERROR] ${req.method} ${req.originalUrl}:`, err.message);
+    const isProduction = process.env.NODE_ENV === "production";
+    
+    // Professional Logging with Winston
+    winstonLogger.error({
+        message: err.message,
+        method: req.method,
+        path: req.originalUrl,
+        stack: !isProduction ? err.stack : undefined,
+        user: req.user ? req.user.id : "anonymous"
+    });
     
     // Check for Mongoose connection/timeout errors
     if (err.name === 'MongooseServerSelectionError' || err.message.includes('buffering timed out')) {
@@ -13,8 +24,6 @@ exports.errorHandler = (err, req, res, next) => {
             retryAfter: 15
         });
     }
-
-    const isProduction = process.env.NODE_ENV === "production";
 
     if (!isProduction) {
         console.error(err.stack);

@@ -21,6 +21,10 @@ class AuthRepository {
         return await User.findByIdAndUpdate(id, updateData, { new: true }).select("-password");
     }
 
+    async findUserWithPassword(id) {
+        return await User.findById(id); // Includes password by default
+    }
+
     async deleteUser(id) {
         return await User.findByIdAndDelete(id);
     }

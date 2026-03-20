@@ -7,10 +7,13 @@ const API_BASE_URL = rawApiUrl
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000, // Increased to 30s for robustness
+  timeout: 30000,
   headers: { "Content-Type": "application/json" },
+  withCredentials: true, // Send and receive cookies
 });
 
+// Since we are using HttpOnly cookies, we don't need the Authorization header in request interceptor
+// but we keep it for backward compatibility if needed by other services.
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {

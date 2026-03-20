@@ -5,6 +5,7 @@ const compression = require("compression");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
+const cookieParser = require("cookie-parser");
 const { errorHandler } = require("./middleware/error.middleware");
 const { logger } = require("./middleware/logger.middleware");
 
@@ -30,14 +31,23 @@ app.use(helmet()); // Add standard security headers
 app.use(mongoSanitize()); // Prevent NoSQL Injection
 app.disable('x-powered-by'); // Hide stack info
 
-// Standard Rate Limiter: 1000 requests per 15 minutes per IP (increased for robustness)
+// Standard Rate Limiter: 500 requests per 15 minutes per IP
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 5000, 
+    max: 500, 
     message: { success: false, message: "Security Notice: Rate limit exceeded. Please wait 15 minutes." },
     standardHeaders: true,
     legacyHeaders: false,
-    skip: (req) => process.env.NODE_ENV === "development" && req.ip === "127.0.0.1", // Optional: skip local dev
+    skip: (req) => process.env.NODE_ENV === "development" && (req.ip === "127.0.0.1" || req.ip === "::1"),
+});
+
+// Stricter Rate Limiter for AUTH: 10 attempts per minute
+const authLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000,
+    max: 10,
+    message: { success: false, message: "Security Notice: Too many login attempts. Please try again after 1 minute." },
+    standardHeaders: true,
+    legacyHeaders: false,
 });
 
 app.use(compression()); // Compress all responses
@@ -47,17 +57,20 @@ app.use(cors({
     origin: (origin, callback) => {
         const allowedOrigins = [
             process.env.FRONTEND_URL,
-            "http://localhost:8000",
-            "http://localhost:5173"
+            "http://localhost:5173", // Still allow local dev
+            "http://127.0.0.1:5173"
         ].filter(Boolean);
         
-        // Allow requests with no origin (like mobile apps or curl requests)
-        // Or if the origin is in the allowed list
-        // Or if the origin matches a .render.com or Hostinger domain
-        if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.render.com')) {
+        // Block invalid origins in production
+        if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(null, true); // Temporarily permissive to debug production, will narrow down once stable
+            const isProd = process.env.NODE_ENV === "production";
+            if (isProd) {
+                callback(new Error("CORS Policy: Origin not allowed"), false);
+            } else {
+                callback(null, true); 
+            }
         }
     },
     credentials: true,
@@ -66,6 +79,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Global Request Timeout Middleware (30 seconds)
 app.use((req, res, next) => {
@@ -87,7 +101,7 @@ app.use("/bills", express.static(path.join(__dirname, "../../bills")));
 app.use("/uploads", express.static(path.join(__dirname, "../../uploads")));
 
 // Setting up Routes
-app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/auth", authLimiter, authRoutes);
 app.use("/api/v1/rooms", roomRoutes);
 app.use("/api/v1/tenants", tenantRoutes);
 app.use("/api/v1/bills", billingRoutes);

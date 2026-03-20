@@ -22,5 +22,5 @@ services:
         sync: false
       - key: JWT_EXPIRES_IN
         value: "7d"
-      - key: CLIENT_URL
-        value: "REPLACE_ME_WITH_NETLIFY_URL"
+      - key: FRONTEND_URL
+        value: "REPLACE_ME_WITH_YOUR_FRONTEND_URL"

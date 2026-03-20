@@ -9,22 +9,25 @@ const log = (msg) => {
 };
 
 exports.authenticate = (req, res, next) => {
-    const token = req.header("Authorization");
-    log(`Auth attempt: ${req.method} ${req.originalUrl || req.url}`);
+    let token = req.header("Authorization");
+    
+    // Check cookies if header is missing
+    if (!token && req.cookies && req.cookies.token) {
+        token = req.cookies.token;
+    } else if (token) {
+        token = token.replace("Bearer ", "");
+    }
 
     if (!token) {
-        log("Auth FAILED: No token provided");
-        return res.status(401).json({ message: "Access Denied" });
+        return res.status(401).json({ message: "Access Denied: No authentication token found" });
     }
 
     try {
-        const verified = jwt.verify(token.replace("Bearer ", ""), env.JWT_SECRET);
+        const verified = jwt.verify(token, env.JWT_SECRET);
         req.user = verified;
-        log(`Auth SUCCESS: User ID ${verified.id}, Role ${verified.role}`);
         next();
     } catch (err) {
-        log(`Auth FAILED: Invalid token - ${err.message}`);
-        res.status(401).json({ message: "Invalid Token" });
+        res.status(401).json({ message: "Invalid or expired token" });
     }
 };
 

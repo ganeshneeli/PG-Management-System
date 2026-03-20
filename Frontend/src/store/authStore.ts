@@ -16,37 +16,45 @@ interface AuthState {
   logout: () => void;
 }
 
+import api from "@/api/axios";
+
 export const useAuthStore = create<AuthState>((set) => {
-  const token = localStorage.getItem("token");
+  // We no longer rely on 'token' in localStorage for security, 
+  // but we keep 'user' for immediate UI rendering.
   let user = null;
   try {
     user = JSON.parse(localStorage.getItem("user") || "null");
   } catch (e) {
-    console.error("Failed to parse user from localStorage", e);
     localStorage.removeItem("user");
   }
 
   return {
-    token,
+    token: null, // Token is now in HttpOnly cookie
     user,
-    isAuthenticated: !!token && !!user,
+    isAuthenticated: !!user, // Simplified check, will be verified by API calls
     setUser: (user) => {
       if (user) {
         localStorage.setItem("user", JSON.stringify(user));
       } else {
         localStorage.removeItem("user");
       }
-      set({ user, isAuthenticated: !!localStorage.getItem("token") && !!user });
+      set({ user, isAuthenticated: !!user });
     },
-    setAuth: (token, user) => {
-      localStorage.setItem("token", token);
+    setAuth: (_token, user) => {
+      // We ignore the token parameter as it's handled by cookies
       localStorage.setItem("user", JSON.stringify(user));
-      set({ token, user, isAuthenticated: true });
+      set({ token: null, user, isAuthenticated: true });
     },
-    logout: () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      set({ token: null, user: null, isAuthenticated: false });
+    logout: async () => {
+      try {
+        await api.post("/auth/logout");
+      } catch (e) {
+        console.error("Logout API failed", e);
+      } finally {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token"); // Clean up old tokens if any
+        set({ token: null, user: null, isAuthenticated: false });
+      }
     },
   };
 });
