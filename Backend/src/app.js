@@ -57,7 +57,9 @@ app.use(cors({
     origin: (origin, callback) => {
         const allowedOrigins = [
             process.env.FRONTEND_URL,
-            "http://localhost:5173", // Still allow local dev
+            "https://pgmanagmentsystem.netlify.app",
+            "http://localhost:5173",
+            "http://localhost:8000",
             "http://127.0.0.1:5173"
         ].filter(Boolean);
         
